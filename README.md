@@ -1,6 +1,6 @@
 # Fantasy Bank
 
-*The ultimate solution for all your DnD and other fantasy game needs!
+*The ultimate solution for all your DnD and other fantasy game needs!*
 
 ---
 
