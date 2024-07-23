@@ -1,3 +1,12 @@
+body,
+html {
+  background-color: #102423;
+  margin: 0;
+  padding: 10px;
+  color: #EEE;
+  font-size: 20px;
+}
+
 .App {
   text-align: center;
 }
@@ -32,6 +41,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
