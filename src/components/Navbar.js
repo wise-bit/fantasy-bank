@@ -23,7 +23,7 @@ const Navbar = () => {
               justifyContent="flex-end"
               sx={{ fontSize: "24px" }}
             >
-              0 GP
+              79 GP
             </Box>
           </Grid>
         </Grid>
