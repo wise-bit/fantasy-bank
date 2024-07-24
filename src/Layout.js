@@ -3,11 +3,11 @@ import { Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import { Box } from "@mui/material";
 
-const Layout = () => {
+const Layout = ({ totalBalance }) => {
   return (
     <Box>
-      <Box sx={{ marginBottom: "50px" }} >
-        <Navbar />
+      <Box sx={{ marginBottom: "50px" }}>
+        <Navbar totalBalance={totalBalance} />
       </Box>
       <Box>
         <Outlet />

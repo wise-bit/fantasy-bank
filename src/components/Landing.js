@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 import CustomSelect from "./CustomSelect";
 import CustomTextField from "./CustomTextField";
 
-const Landing = () => {
+const Landing = ({ setTotalBalance }) => {
   const [worlds, setWorlds] = useState([]);
   const [selectedWorld, setSelectedWorld] = useState("");
   const [step, setStep] = useState(1);
@@ -45,6 +45,7 @@ const Landing = () => {
       );
       if (isPasswordValid) {
         setBalance(userData.data().balance);
+        setTotalBalance(79); // TODO fix!!
         setStep(3);
       } else {
         alert("Login failed");
@@ -56,6 +57,7 @@ const Landing = () => {
 
   const handleLogout = () => {
     setStep(1);
+    setTotalBalance(0);
   };
 
   return (

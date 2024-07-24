@@ -9,20 +9,21 @@ import Landing from "./components/Landing";
 import "./App.css";
 
 const App = () => {
-  const [username, setUsername] = useState("");
-  const [userData, setUserData] = useState({ coins: 0 });
+  // const invest = () => {};
 
-  const invest = () => {};
+  // const pullUserData = () => {
+  //   setUserData({ coins: 0 });
+  // };
 
-  const pullUserData = () => {
-    setUserData({ coins: 0 });
-  };
+  const [totalBalance, setTotalBalance] = useState(0);
+
+  console.log(totalBalance);
 
   return (
     <div>
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Landing />} />
+        <Route path="/" element={<Layout totalBalance={totalBalance} />}>
+          <Route index element={<Landing setTotalBalance={setTotalBalance} />} />
           <Route path="/home" element={<Landing />} />
           <Route path="*" element={<NoMatch />} />
         </Route>

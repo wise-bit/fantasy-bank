@@ -1,6 +1,6 @@
 import { Box, Grid } from "@mui/material";
 
-const Navbar = () => {
+const Navbar = ({ totalBalance }) => {
   return (
     <>
       <Box padding={2}>
@@ -23,7 +23,7 @@ const Navbar = () => {
               justifyContent="flex-end"
               sx={{ fontSize: "24px" }}
             >
-              79 GP
+              {totalBalance} GP
             </Box>
           </Grid>
         </Grid>
