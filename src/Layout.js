@@ -5,21 +5,21 @@ import PropTypes from 'prop-types';
 
 import Navbar from './components/Navbar';
 
-Layout.propTypes = {
-  totalBalance: PropTypes.string,
-};
-
 const Layout = ({ totalBalance }) => {
   return (
     <Box>
-      <Box sx={{ marginBottom: '50px' }}>
+      <Box sx={{ height: '10vh' }}>
         <Navbar totalBalance={totalBalance} />
       </Box>
-      <Box>
+      <Box sx={{ height: '80vh' }}>
         <Outlet />
       </Box>
     </Box>
   );
+};
+
+Layout.propTypes = {
+  totalBalance: PropTypes.string,
 };
 
 export default Layout;

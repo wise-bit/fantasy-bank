@@ -2,10 +2,6 @@ import React from "react";
 import { Box, Grid } from '@mui/material';
 import PropTypes from 'prop-types';
 
-Navbar.propTypes = {
-  totalBalance: PropTypes.string,
-};
-
 const Navbar = ({ totalBalance }) => {
   return (
     <>
@@ -18,7 +14,7 @@ const Navbar = ({ totalBalance }) => {
             <Box
               display='flex'
               justifyContent='center'
-              sx={{ fontSize: '36px' }}
+              sx={{ fontSize: '32px' }}
             >
               Fantasy Bank
             </Box>
@@ -29,13 +25,17 @@ const Navbar = ({ totalBalance }) => {
               justifyContent='flex-end'
               sx={{ fontSize: '24px' }}
             >
-              {totalBalance} GP
+              {totalBalance} gp
             </Box>
           </Grid>
         </Grid>
       </Box>
     </>
   );
+};
+
+Navbar.propTypes = {
+  totalBalance: PropTypes.string,
 };
 
 export default Navbar;

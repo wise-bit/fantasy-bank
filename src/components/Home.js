@@ -8,10 +8,6 @@ import PropTypes from 'prop-types';
 import CustomSelect from './CustomSelect';
 import CustomTextField from './CustomTextField';
 
-Home.propTypes = {
-  setTotalBalance: PropTypes.func,
-};
-
 const Home = ({ setTotalBalance }) => {
   const [worlds, setWorlds] = useState([]);
   const [selectedWorld, setSelectedWorld] = useState('');
@@ -69,7 +65,7 @@ const Home = ({ setTotalBalance }) => {
   return (
     <>
       <Box
-        sx={{ marginTop: '50px' }}
+        height='100%'
         display='flex'
         justifyContent='center'
         alignItems='center'
@@ -81,7 +77,6 @@ const Home = ({ setTotalBalance }) => {
               value={selectedWorld}
               onChange={(e) => setSelectedWorld(e.target.value)}
               displayEmpty
-              sx={{ marginTop: '60px', marginBottom: '10px' }}
             >
               <MenuItem value='' disabled>
                 Select World...
@@ -173,6 +168,10 @@ const Home = ({ setTotalBalance }) => {
       </Box>
     </>
   );
+};
+
+Home.propTypes = {
+  setTotalBalance: PropTypes.func,
 };
 
 export default Home;
