@@ -3,9 +3,15 @@ import pluginJs from '@eslint/js';
 import pluginReact from 'eslint-plugin-react';
 
 export default [
-  { files: ['**/*.{js,mjs,cjs,jsx}'] },
-  { ignores: ['**/firebase.js'] },
-  { languageOptions: { globals: globals.browser } },
+  {
+    files: ['**/*.{js,mjs,cjs,jsx}'],
+  },
+  {
+    ignores: ['**/firebase.js'],
+  },
+  {
+    languageOptions: { globals: globals.browser },
+  },
   pluginJs.configs.recommended,
   pluginReact.configs.flat.recommended,
   {
@@ -14,5 +20,8 @@ export default [
         version: 'detect',
       },
     },
+  },
+  {
+    extends: 'react-app',
   },
 ];

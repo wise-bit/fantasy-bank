@@ -1,31 +1,23 @@
-import React, { useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import React, { useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
 
 // Importing components
-import Layout from "./Layout";
-import NoMatch from "./components/NoMatch";
-import Home from "./components/Home";
+import Layout from './Layout';
+import NoMatch from './components/NoMatch';
+import Home from './components/Home';
 
-import "./App.css";
+import './App.css';
 
 const App = () => {
-  // const invest = () => {};
-
-  // const pullUserData = () => {
-  //   setUserData({ coins: 0 });
-  // };
-
   const [totalBalance, setTotalBalance] = useState(0);
-
-  console.log(totalBalance);
 
   return (
     <div>
       <Routes>
-        <Route path="/" element={<Layout totalBalance={totalBalance} />}>
+        <Route path='/' element={<Layout totalBalance={totalBalance} />}>
           <Route index element={<Home setTotalBalance={setTotalBalance} />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="*" element={<NoMatch />} />
+          <Route path='/home' element={<Home />} />
+          <Route path='*' element={<NoMatch />} />
         </Route>
       </Routes>
     </div>
