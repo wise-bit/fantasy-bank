@@ -1,6 +1,6 @@
 import { Select, styled } from "@mui/material";
 
-const CustomSelect = styled(Select)(({ theme }) => ({
+const CustomSelect = styled(Select)(() => ({
   width: 400, // Set a fixed width
   color: "white",
   fontFamily: "Bona Nova SC",

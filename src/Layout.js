@@ -1,12 +1,18 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import { Box } from "@mui/material";
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import { Box } from '@mui/material';
+import PropTypes from 'prop-types';
+
+import Navbar from './components/Navbar';
+
+Layout.propTypes = {
+  totalBalance: PropTypes.string,
+};
 
 const Layout = ({ totalBalance }) => {
   return (
     <Box>
-      <Box sx={{ marginBottom: "50px" }}>
+      <Box sx={{ marginBottom: '50px' }}>
         <Navbar totalBalance={totalBalance} />
       </Box>
       <Box>

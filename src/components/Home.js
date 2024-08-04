@@ -1,22 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { Box, MenuItem, Select, Button, TextField } from "@mui/material";
-import { db } from "../firebase";
-import { collection, getDocs } from "firebase/firestore";
-import bcrypt from "bcryptjs";
-import CustomSelect from "./CustomSelect";
-import CustomTextField from "./CustomTextField";
+import React, { useEffect, useState } from 'react';
+import { Box, MenuItem, Button } from '@mui/material';
+import { db } from '../firebase';
+import { collection, getDocs } from 'firebase/firestore';
+import bcrypt from 'bcryptjs';
+import PropTypes from 'prop-types';
 
-const Landing = ({ setTotalBalance }) => {
+import CustomSelect from './CustomSelect';
+import CustomTextField from './CustomTextField';
+
+Home.propTypes = {
+  setTotalBalance: PropTypes.func,
+};
+
+const Home = ({ setTotalBalance }) => {
   const [worlds, setWorlds] = useState([]);
-  const [selectedWorld, setSelectedWorld] = useState("");
+  const [selectedWorld, setSelectedWorld] = useState('');
   const [step, setStep] = useState(1);
-  const [user, setUser] = useState("");
-  const [passcode, setPasscode] = useState("");
+  const [user, setUser] = useState('');
+  const [passcode, setPasscode] = useState('');
   const [balance, setBalance] = useState(null);
 
   useEffect(() => {
     const fetchWorlds = async () => {
-      const querySnapshot = await getDocs(collection(db, "dndWorlds"));
+      const querySnapshot = await getDocs(collection(db, 'dndWorlds'));
       const worldsData = querySnapshot.docs.map((doc) => doc.data().name);
       setWorlds(worldsData);
     };
@@ -35,7 +41,7 @@ const Landing = ({ setTotalBalance }) => {
   };
 
   const handleLogin = async () => {
-    const userDoc = await getDocs(collection(db, "users"));
+    const userDoc = await getDocs(collection(db, 'users'));
     const userData = userDoc.docs.find((doc) => doc.data().username === user);
 
     if (userData) {
@@ -48,10 +54,10 @@ const Landing = ({ setTotalBalance }) => {
         setTotalBalance(79); // TODO fix!!
         setStep(3);
       } else {
-        alert("Login failed");
+        alert('Login failed');
       }
     } else {
-      alert("Login failed");
+      alert('Login failed');
     }
   };
 
@@ -63,11 +69,11 @@ const Landing = ({ setTotalBalance }) => {
   return (
     <>
       <Box
-        sx={{ marginTop: "50px" }}
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        flexDirection="column"
+        sx={{ marginTop: '50px' }}
+        display='flex'
+        justifyContent='center'
+        alignItems='center'
+        flexDirection='column'
       >
         {step === 1 && (
           <>
@@ -75,9 +81,9 @@ const Landing = ({ setTotalBalance }) => {
               value={selectedWorld}
               onChange={(e) => setSelectedWorld(e.target.value)}
               displayEmpty
-              sx={{ marginTop: "60px", marginBottom: "10px" }}
+              sx={{ marginTop: '60px', marginBottom: '10px' }}
             >
-              <MenuItem value="" disabled>
+              <MenuItem value='' disabled>
                 Select World...
               </MenuItem>
               {worlds.map((world, index) => (
@@ -89,10 +95,10 @@ const Landing = ({ setTotalBalance }) => {
             <Button
               onClick={handleNext}
               sx={{
-                color: "black",
-                fontFamily: "Bona Nova SC",
-                background: "white",
-                marginTop: "30px",
+                color: 'black',
+                fontFamily: 'Bona Nova SC',
+                background: 'white',
+                marginTop: '30px',
               }}
             >
               join
@@ -102,23 +108,23 @@ const Landing = ({ setTotalBalance }) => {
         {step === 2 && (
           <>
             <CustomTextField
-              label="Username"
+              label='Username'
               value={user}
               onChange={(e) => setUser(e.target.value)}
             />
             <CustomTextField
-              label="4-digit Passcode"
-              type="password"
+              label='4-digit passcode'
+              type='password'
               value={passcode}
               onChange={(e) => setPasscode(e.target.value)}
             />
             <Button
               onClick={handleLogin}
               sx={{
-                color: "black",
-                fontFamily: "Bona Nova SC",
-                background: "white",
-                marginTop: "30px",
+                color: 'black',
+                fontFamily: 'Bona Nova SC',
+                background: 'white',
+                marginTop: '30px',
               }}
             >
               login
@@ -126,10 +132,10 @@ const Landing = ({ setTotalBalance }) => {
             <Button
               onClick={handleBack}
               sx={{
-                color: "black",
-                fontFamily: "Bona Nova SC",
-                background: "#CCC",
-                marginTop: "30px",
+                color: 'black',
+                fontFamily: 'Bona Nova SC',
+                background: '#CCC',
+                marginTop: '30px',
               }}
             >
               back
@@ -144,19 +150,19 @@ const Landing = ({ setTotalBalance }) => {
             </Box>
             <Box
               sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "column",
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
               }}
             >
               <Button
                 onClick={handleLogout}
                 sx={{
-                  color: "black",
-                  fontFamily: "Bona Nova SC",
-                  background: "#CCC",
-                  marginTop: "30px",
+                  color: 'black',
+                  fontFamily: 'Bona Nova SC',
+                  background: '#CCC',
+                  marginTop: '30px',
                 }}
               >
                 logout
@@ -169,4 +175,4 @@ const Landing = ({ setTotalBalance }) => {
   );
 };
 
-export default Landing;
+export default Home;

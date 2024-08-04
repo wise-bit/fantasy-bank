@@ -1,7 +1,7 @@
 import { TextField as MuiTextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-const CustomTextField = styled(MuiTextField)(({ theme }) => ({
+const CustomTextField = styled(MuiTextField)(() => ({
   width: 400, // Set a fixed width
   marginTop: "30px",
   "& .MuiInputBase-root": {
