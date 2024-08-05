@@ -28,6 +28,7 @@ const WorldSelect = ({ worlds, selectedWorld, setSelectedWorld, handleNext }) =>
           fontFamily: 'Bona Nova SC',
           background: 'white',
           marginTop: '30px',
+          width: '300px',
         }}
       >
         join
@@ -37,8 +38,8 @@ const WorldSelect = ({ worlds, selectedWorld, setSelectedWorld, handleNext }) =>
 };
 
 WorldSelect.propTypes = {
-  worlds: PropTypes.func,
-  selectedWorld: PropTypes.func,
+  worlds: PropTypes.array,
+  selectedWorld: PropTypes.string,
   setSelectedWorld: PropTypes.func,
   handleNext: PropTypes.func,
 };

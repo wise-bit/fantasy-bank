@@ -19,7 +19,7 @@ const Layout = ({ totalBalance }) => {
 };
 
 Layout.propTypes = {
-  totalBalance: PropTypes.string,
+  totalBalance: PropTypes.number,
 };
 
 export default Layout;

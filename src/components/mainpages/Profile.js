@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Button } from '@mui/material';
+import PropTypes from 'prop-types';
 
 const Profile = ({ username, balance, handleLogout }) => {
   return (
@@ -30,6 +31,12 @@ const Profile = ({ username, balance, handleLogout }) => {
       </Box>
     </>
   );
+};
+
+Profile.propTypes = {
+  username: PropTypes.string,
+  balance: PropTypes.string,
+  handleLogout: PropTypes.func,
 };
 
 export default Profile;

@@ -90,6 +90,7 @@ const Home = ({ setTotalBalance }) => {
             setUser={setUsername}
             passcode={passcode}
             setPasscode={setPasscode}
+            selectedWorld={selectedWorld}
             handleLogin={handleLogin}
             handleBack={handleBack}
           />

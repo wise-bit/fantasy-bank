@@ -1,10 +1,49 @@
 import React from 'react';
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import CustomTextField from '../customs/CustomTextField';
+import PropTypes from 'prop-types';
+import KnownWorlds from './DataKnownWorlds';
 
-const Login = ({user, setUser, passcode, setPasscode, handleLogin, handleBack}) => {
+const Login = ({
+  user,
+  setUser,
+  passcode,
+  setPasscode,
+  handleLogin,
+  handleBack,
+  selectedWorld,
+}) => {
+  const imageSrc = KnownWorlds.find(
+    (world) => world.name === selectedWorld
+  )?.imageName;
+  console.log(imageSrc);
+
   return (
     <>
+      {imageSrc ? (
+        <>
+          <Box
+            component='img'
+            src={imageSrc}
+            alt='Pixel Art'
+            sx={{
+              width: 250,
+              imageRendering: 'pixelated',
+              marginBottom: '30px',
+            }}
+          />
+          <Box
+            sx={{
+              marginBottom: '50px',
+              fontSize: '24px',
+            }}
+          >
+            {selectedWorld}
+          </Box>
+        </>
+      ) : (
+        <></>
+      )}
       <CustomTextField
         label='Username'
         value={user}
@@ -23,6 +62,7 @@ const Login = ({user, setUser, passcode, setPasscode, handleLogin, handleBack}) 
           fontFamily: 'Bona Nova SC',
           background: 'white',
           marginTop: '30px',
+          width: '300px',
         }}
       >
         login
@@ -32,7 +72,7 @@ const Login = ({user, setUser, passcode, setPasscode, handleLogin, handleBack}) 
         sx={{
           color: 'black',
           fontFamily: 'Bona Nova SC',
-          background: '#CCC',
+          background: '#EEE',
           marginTop: '30px',
         }}
       >
@@ -40,6 +80,16 @@ const Login = ({user, setUser, passcode, setPasscode, handleLogin, handleBack}) 
       </Button>
     </>
   );
+};
+
+Login.propTypes = {
+  user: PropTypes.string,
+  setUser: PropTypes.func,
+  passcode: PropTypes.string,
+  setPasscode: PropTypes.func,
+  handleLogin: PropTypes.func,
+  handleBack: PropTypes.func,
+  selectedWorld: PropTypes.string,
 };
 
 export default Login;
