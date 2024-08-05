@@ -35,7 +35,7 @@ const Navbar = ({ totalBalance }) => {
 };
 
 Navbar.propTypes = {
-  totalBalance: PropTypes.string,
+  totalBalance: PropTypes.number,
 };
 
 export default Navbar;

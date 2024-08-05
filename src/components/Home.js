@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Box, MenuItem, Button } from '@mui/material';
+import { Box } from '@mui/material';
 import { db } from '../firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import bcrypt from 'bcryptjs';
 import PropTypes from 'prop-types';
 
-import CustomSelect from './CustomSelect';
-import CustomTextField from './CustomTextField';
+import WorldSelect from './mainpages/WorldSelect';
+import Login from './mainpages/Login';
+import Profile from './mainpages/Profile';
 
 const Home = ({ setTotalBalance }) => {
   const [worlds, setWorlds] = useState([]);
   const [selectedWorld, setSelectedWorld] = useState('');
   const [step, setStep] = useState(1);
-  const [user, setUser] = useState('');
+  const [username, setUsername] = useState('');
   const [passcode, setPasscode] = useState('');
   const [balance, setBalance] = useState(null);
 
@@ -26,6 +27,33 @@ const Home = ({ setTotalBalance }) => {
     fetchWorlds();
   }, []);
 
+  const handleLogin = async () => {
+    const userDoc = await getDocs(collection(db, 'users'));
+    const userData = userDoc.docs.find(
+      (doc) => doc.data().username === username
+    );
+
+    if (userData) {
+      const isPasswordValid = await bcrypt.compare(
+        passcode,
+        userData.data().password
+      );
+      if (isPasswordValid) {
+        setBalance(userData.data().balance);
+        setTotalBalance(79); // TODO make dynamic
+        setStep(3);
+        return true;
+      }
+      return false;
+    }
+    return false;
+  };
+
+  const handleLogout = () => {
+    setStep(1);
+    setTotalBalance(0);
+  };
+
   const handleNext = () => {
     setStep(2);
   };
@@ -36,31 +64,7 @@ const Home = ({ setTotalBalance }) => {
     }
   };
 
-  const handleLogin = async () => {
-    const userDoc = await getDocs(collection(db, 'users'));
-    const userData = userDoc.docs.find((doc) => doc.data().username === user);
-
-    if (userData) {
-      const isPasswordValid = await bcrypt.compare(
-        passcode,
-        userData.data().password
-      );
-      if (isPasswordValid) {
-        setBalance(userData.data().balance);
-        setTotalBalance(79); // TODO fix!!
-        setStep(3);
-      } else {
-        alert('Login failed');
-      }
-    } else {
-      alert('Login failed');
-    }
-  };
-
-  const handleLogout = () => {
-    setStep(1);
-    setTotalBalance(0);
-  };
+  // User Pages
 
   return (
     <>
@@ -72,98 +76,30 @@ const Home = ({ setTotalBalance }) => {
         flexDirection='column'
       >
         {step === 1 && (
-          <>
-            <CustomSelect
-              value={selectedWorld}
-              onChange={(e) => setSelectedWorld(e.target.value)}
-              displayEmpty
-            >
-              <MenuItem value='' disabled>
-                Select World...
-              </MenuItem>
-              {worlds.map((world, index) => (
-                <MenuItem key={index} value={world}>
-                  {world}
-                </MenuItem>
-              ))}
-            </CustomSelect>
-            <Button
-              onClick={handleNext}
-              sx={{
-                color: 'black',
-                fontFamily: 'Bona Nova SC',
-                background: 'white',
-                marginTop: '30px',
-              }}
-            >
-              join
-            </Button>
-          </>
+          <WorldSelect
+            worlds={worlds}
+            selectedWorld={selectedWorld}
+            setSelectedWorld={setSelectedWorld}
+            handleNext={handleNext}
+          />
         )}
         {step === 2 && (
-          <>
-            <CustomTextField
-              label='Username'
-              value={user}
-              onChange={(e) => setUser(e.target.value)}
-            />
-            <CustomTextField
-              label='4-digit passcode'
-              type='password'
-              value={passcode}
-              onChange={(e) => setPasscode(e.target.value)}
-            />
-            <Button
-              onClick={handleLogin}
-              sx={{
-                color: 'black',
-                fontFamily: 'Bona Nova SC',
-                background: 'white',
-                marginTop: '30px',
-              }}
-            >
-              login
-            </Button>
-            <Button
-              onClick={handleBack}
-              sx={{
-                color: 'black',
-                fontFamily: 'Bona Nova SC',
-                background: '#CCC',
-                marginTop: '30px',
-              }}
-            >
-              back
-            </Button>
-          </>
+          <Login
+            user={username}
+            setUser={setUsername}
+            passcode={passcode}
+            setPasscode={setPasscode}
+            selectedWorld={selectedWorld}
+            handleLogin={handleLogin}
+            handleBack={handleBack}
+          />
         )}
         {step === 3 && balance !== null && (
-          <Box>
-            <Box>
-              <p>Welcome, {user}!</p>
-              <p>Your Fantasy Bank Balance: {balance} GP</p>
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexDirection: 'column',
-              }}
-            >
-              <Button
-                onClick={handleLogout}
-                sx={{
-                  color: 'black',
-                  fontFamily: 'Bona Nova SC',
-                  background: '#CCC',
-                  marginTop: '30px',
-                }}
-              >
-                logout
-              </Button>
-            </Box>
-          </Box>
+          <Profile
+            username={username}
+            balance={balance}
+            handleLogout={handleLogout}
+          />
         )}
       </Box>
     </>
