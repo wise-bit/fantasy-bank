@@ -21,9 +21,8 @@ const Navbar = ({ authed, bankTitle, func2 }) => {
                     src={imageSrc}
                     alt='Pixel Art'
                     sx={{
-                      height: 30,
+                      height: 50,
                       imageRendering: 'pixelated',
-                      marginBottom: '30px',
                     }}
                   />
                 </>

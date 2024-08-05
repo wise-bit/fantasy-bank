@@ -9,15 +9,85 @@ import WorldSelect from './mainpages/WorldSelect';
 import Login from './mainpages/Login';
 import Profile from './mainpages/Profile';
 
-const Home = ({ setAuthed, setBankTitle, setFunc2 }) => {
+const Home = ({ authed, setAuthed, setBankTitle, setFunc2 }) => {
+  // Prepare all function params and fetched data
+  useEffect(() => {
+    const handleLogout = () => {
+      setUsername('');
+      setStep(1);
+      setAuthed(false);
+      setSelectedWorld('');
+      setBankTitle('');
+
+      resetCache();
+    };
+
+    const fetchWorlds = async () => {
+      const querySnapshot = await getDocs(collection(db, 'dndWorlds'));
+      const worldsData = querySnapshot.docs.map((doc) => doc.data().name);
+      setWorlds(worldsData);
+    };
+
+    setFunc2(() => () => handleLogout());
+    fetchWorlds();
+  }, [setFunc2, setAuthed, setBankTitle]);
+
+  const storedUserId = localStorage.getItem('Rh8bzfYSBg-fbank-userId');
+  const storedUsername = localStorage.getItem('Rh8bzfYSBg-fbank-username');
+  const storedBalance = localStorage.getItem('Rh8bzfYSBg-fbank-balance');
+  const storedTotalFunds = localStorage.getItem('Rh8bzfYSBg-fbank-totalFunds');
+  const storedBankTitle = localStorage.getItem('Rh8bzfYSBg-fbank-bankTitle');
+
   const [worlds, setWorlds] = useState([]);
   const [selectedWorld, setSelectedWorld] = useState('');
   const [step, setStep] = useState(1);
-  const [userId, setUserId] = useState('');
-  const [username, setUsername] = useState('');
+  const [userId, setUserId] = useState();
+  const [username, setUsername] = useState();
   const [passcode, setPasscode] = useState('');
-  const [balance, setBalance] = useState(null);
+  const [balance, setBalance] = useState(0);
   const [totalFunds, setTotalFunds] = useState(0);
+
+  const resetCache = () => {
+    localStorage.removeItem('Rh8bzfYSBg-fbank-userId');
+    localStorage.removeItem('Rh8bzfYSBg-fbank-username');
+    localStorage.removeItem('Rh8bzfYSBg-fbank-balance');
+    localStorage.removeItem('Rh8bzfYSBg-fbank-totalFunds');
+    localStorage.removeItem('Rh8bzfYSBg-fbank-bankTitle');
+  };
+
+  useEffect(() => {
+    if (
+      !!(
+        storedUserId &&
+        storedUsername &&
+        storedBalance &&
+        storedTotalFunds &&
+        storedBankTitle
+      )
+    ) {
+      setAuthed(true);
+      setBankTitle(storedBankTitle);
+    } else {
+      setAuthed(false);
+      resetCache();
+    }
+  });
+
+  useEffect(() => {
+    setStep(authed ? 3 : 1);
+    setSelectedWorld(storedBankTitle || '');
+    setUserId(storedUserId || '');
+    setUsername(storedUsername || '');
+    setBalance(strToInt(storedBalance) || 0);
+    setTotalFunds(strToInt(storedTotalFunds) || 0);
+  }, [
+    authed,
+    storedBankTitle,
+    storedUserId,
+    storedUsername,
+    storedBalance,
+    storedTotalFunds,
+  ]);
 
   const strToInt = (str) => {
     const parsedInt = parseInt(str, 10);
@@ -30,6 +100,8 @@ const Home = ({ setAuthed, setBankTitle, setFunc2 }) => {
   const handleSetSelectedWorld = (world) => {
     setSelectedWorld(world);
     setBankTitle(world);
+
+    localStorage.setItem('Rh8bzfYSBg-fbank-bankTitle', world);
   };
 
   const handleLogin = async () => {
@@ -45,11 +117,8 @@ const Home = ({ setAuthed, setBankTitle, setFunc2 }) => {
         passcode,
         userData.data().password
       );
-      if (isPasswordValid) {
-        setAuthed(true);
-        setUserId(userData.id);
-        setBalance(userData.data().balance);
-        setStep(3);
+      if (isPasswordValid || authed) {
+        setAuthed(false);
 
         const userSum = userDoc.docs.reduce((acc, entity) => {
           const entityData = entity.data();
@@ -61,8 +130,17 @@ const Home = ({ setAuthed, setBankTitle, setFunc2 }) => {
           return acc + strToInt(entityData.balance);
         }, 0);
 
-        const totalPool = userSum + npcSum;
-        setTotalFunds(totalPool);
+        const balance = userData.data().balance;
+        const totalFunds = userSum + npcSum;
+
+        // Store user data in local storage
+        localStorage.setItem('Rh8bzfYSBg-fbank-userId', userData.id);
+        localStorage.setItem('Rh8bzfYSBg-fbank-username', username);
+        localStorage.setItem('Rh8bzfYSBg-fbank-balance', balance);
+        localStorage.setItem('Rh8bzfYSBg-fbank-totalFunds', totalFunds);
+        localStorage.setItem('Rh8bzfYSBg-fbank-bankTitle', selectedWorld);
+
+        setAuthed(true);
 
         return true;
       }
@@ -75,20 +153,25 @@ const Home = ({ setAuthed, setBankTitle, setFunc2 }) => {
     if (amount === '' || isNaN(amount)) return false;
     if (parseFloat(amount) <= 0) return false;
 
-    const newBalance = increment
-      ? parseFloat(balance) + parseFloat(amount)
-      : parseFloat(balance);
+    if (increment) {
+      const newBalance = parseFloat(balance) + parseFloat(amount);
+      const newTotalFunds = parseFloat(totalFunds) + parseFloat(amount);
 
-    try {
-      const docRef = doc(db, 'users', userId);
-      await updateDoc(docRef, { balance: newBalance });
+      try {
+        const docRef = doc(db, 'users', userId);
+        await updateDoc(docRef, { balance: newBalance });
 
-      setBalance(newBalance);
-      setTotalFunds(totalFunds + parseFloat(amount));
-      return true;
-    } catch (error) {
-      console.error('Error updating balance: ', error);
-      return false;
+        setBalance(newBalance);
+        setTotalFunds(newTotalFunds);
+
+        localStorage.setItem('Rh8bzfYSBg-fbank-balance', newBalance);
+        localStorage.setItem('Rh8bzfYSBg-fbank-totalFunds', newTotalFunds);
+
+        return true;
+      } catch (error) {
+        console.error('Error updating balance: ', error);
+        return false;
+      }
     }
   };
 
@@ -104,26 +187,6 @@ const Home = ({ setAuthed, setBankTitle, setFunc2 }) => {
       }
     }
   };
-
-  useEffect(() => {
-    const handleLogout = () => {
-      setUsername('');
-      setStep(1);
-      setBankTitle('');
-      setAuthed(false);
-    };
-
-    const fetchWorlds = async () => {
-      const querySnapshot = await getDocs(collection(db, 'dndWorlds'));
-      const worldsData = querySnapshot.docs.map((doc) => doc.data().name);
-      setWorlds(worldsData);
-    };
-
-    setFunc2(() => () => handleLogout());
-    fetchWorlds();
-  }, [setFunc2, setAuthed, setBankTitle]);
-
-  // User Pages
 
   return (
     <>
@@ -159,6 +222,7 @@ const Home = ({ setAuthed, setBankTitle, setFunc2 }) => {
             balance={balance}
             totalFunds={totalFunds}
             updateBalance={updateBalance}
+            handleLogin={handleLogin}
           />
         )}
       </Box>
@@ -167,7 +231,9 @@ const Home = ({ setAuthed, setBankTitle, setFunc2 }) => {
 };
 
 Home.propTypes = {
-  setTotalBalance: PropTypes.func,
+  setAuthed: PropTypes.func.isRequired,
+  setBankTitle: PropTypes.func.isRequired,
+  setFunc2: PropTypes.func.isRequired,
 };
 
 export default Home;

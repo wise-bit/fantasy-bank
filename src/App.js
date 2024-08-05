@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-// Importing components
 import Layout from './Layout';
 import NoMatch from './components/NoMatch';
 import Home from './components/Home';
-
 import './App.css';
 
 const App = () => {
@@ -19,24 +17,20 @@ const App = () => {
         <Route
           path='/'
           element={
-            <Layout
-              authed={authed}
-              bankTitle={bankTitle}
-              func2={func2}
-            />
+            <Layout authed={authed} bankTitle={bankTitle} func2={func2} />
           }
         >
           <Route
             index
             element={
               <Home
+                authed={authed}
                 setAuthed={setAuthed}
                 setBankTitle={setBankTitle}
                 setFunc2={setFunc2}
               />
             }
           />
-          <Route path='/home' element={<Home />} />
           <Route path='*' element={<NoMatch />} />
         </Route>
       </Routes>

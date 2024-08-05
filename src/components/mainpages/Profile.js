@@ -1,10 +1,20 @@
 import React, { useState } from 'react';
 import { Box, Button, Snackbar, Tooltip } from '@mui/material';
 import PropTypes from 'prop-types';
+import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+
 import KnownPlayers from './DataKnownPlayers';
 import CustomTextField from '../customs/CustomTextField';
+import CustomCircularButton from '../customs/CustomCircularButton';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const Profile = ({ username, balance, totalFunds, updateBalance }) => {
+const Profile = ({
+  username,
+  balance,
+  totalFunds,
+  updateBalance,
+  handleLogin,
+}) => {
   const [amount, setAmount] = useState('');
   const [open, setOpen] = useState(false);
 
@@ -26,6 +36,11 @@ const Profile = ({ username, balance, totalFunds, updateBalance }) => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleRefresh = async () => {
+    await handleLogin();
+    window.location.reload();
   };
 
   return (
@@ -87,6 +102,23 @@ const Profile = ({ username, balance, totalFunds, updateBalance }) => {
           <Box>Contribution:</Box>
           <Box sx={{ fontSize: '32px' }}>{balance} gp</Box>
         </Box>
+
+        <Box
+          display={'flex'}
+          flexDirection={'row'}
+          sx={{
+            marginTop: '20px',
+            width: '100%',
+            alignContent: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <CustomCircularButton onClick={() => handleRefresh()}>
+            <FontAwesomeIcon icon={faSyncAlt} />
+          </CustomCircularButton>
+        </Box>
+
+        {/* Balance Update Components */}
 
         <Box
           sx={{
@@ -158,6 +190,7 @@ Profile.propTypes = {
   balance: PropTypes.number.isRequired,
   totalFunds: PropTypes.number.isRequired,
   updateBalance: PropTypes.func,
+  handleLogin: PropTypes.func,
 };
 
 export default Profile;
