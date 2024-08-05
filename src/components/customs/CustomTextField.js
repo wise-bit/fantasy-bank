@@ -2,52 +2,51 @@ import { TextField as MuiTextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 const CustomTextField = styled(MuiTextField)(() => ({
-  width: 400, // Set a fixed width
-  marginTop: '30px',
+  width: 400,
   '& .MuiInputBase-root': {
-    borderBottom: '1px solid white', // Only bottom border
-    backgroundColor: 'transparent', // Transparent background
+    borderBottom: '1px solid white',
+    background: 'transparent',
     marginTop: '10px',
     color: 'white',
     fontFamily: 'Bona Nova SC',
   },
   '& .MuiInputBase-input': {
-    padding: '8px 16px', // Adjust padding if needed
+    padding: '8px 16px',
     fontFamily: 'Bona Nova SC',
-    textAlign: 'left', // Ensure input text is left-aligned
+    textAlign: 'left',
   },
   '& .MuiInputLabel-root': {
-    color: 'white', // White label color
+    color: 'white',
     fontFamily: 'Bona Nova SC',
   },
   '& .MuiInputLabel-shrink': {
-    color: 'white', // White label color when shrunk
+    color: 'white',
     fontFamily: 'Bona Nova SC',
   },
   '& .MuiFormHelperText-root': {
-    color: 'white', // White helper text color
+    color: 'white',
     fontFamily: 'Bona Nova SC',
   },
   '& .MuiInputBase-input::-webkit-input-placeholder': {
-    color: 'white', // White placeholder text color
-    textAlign: 'center', // Center-align placeholder text
+    color: 'white',
+    textAlign: 'center',
     fontFamily: 'Bona Nova SC',
   },
   '& .MuiInputBase-input:-ms-input-placeholder': {
-    color: 'white', // White placeholder text color for IE
-    textAlign: 'center', // Center-align placeholder text
+    color: 'white',
+    textAlign: 'center',
     fontFamily: 'Bona Nova SC',
   },
   '& .MuiInputBase-input::placeholder': {
-    color: 'white', // White placeholder text color
-    textAlign: 'center', // Center-align placeholder text
+    color: 'white',
+    textAlign: 'center',
     fontFamily: 'Bona Nova SC',
   },
   '& .MuiInput-underline:before': {
-    borderBottom: '1px solid white', // Only bottom border
+    borderBottom: '1px solid white',
   },
   '& .MuiInput-underline:after': {
-    borderBottom: '1px solid white', // Only bottom border after focus
+    borderBottom: '1px solid white',
   },
 }));
 
