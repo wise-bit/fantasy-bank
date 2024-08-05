@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box, Button } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Button, Typography } from '@mui/material';
 import CustomTextField from '../customs/CustomTextField';
 import PropTypes from 'prop-types';
 import KnownWorlds from './DataKnownWorlds';
@@ -13,10 +13,21 @@ const Login = ({
   handleBack,
   selectedWorld,
 }) => {
+  const [warningMessage, setWarningMessage] = useState('');
+
   const imageSrc = KnownWorlds.find(
     (world) => world.name === selectedWorld
   )?.imageName;
-  console.log(imageSrc);
+
+  const checkLogin = async () => {
+    const success = await handleLogin();
+    console.log(success);
+    if (!success) {
+      setWarningMessage('Incorrect username and/or password, please try again.');
+    } else {
+      setWarningMessage('');
+    }
+  };
 
   return (
     <>
@@ -55,8 +66,19 @@ const Login = ({
         value={passcode}
         onChange={(e) => setPasscode(e.target.value)}
       />
+      {warningMessage && (
+        <Typography
+          sx={{
+            color: '#ff8f8f',
+            fontFamily: 'Bona Nova SC',
+            marginTop: '10px',
+          }}
+        >
+          {warningMessage}
+        </Typography>
+      )}
       <Button
-        onClick={handleLogin}
+        onClick={checkLogin}
         sx={{
           color: 'black',
           fontFamily: 'Bona Nova SC',

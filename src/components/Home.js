@@ -42,12 +42,11 @@ const Home = ({ setTotalBalance }) => {
         setBalance(userData.data().balance);
         setTotalBalance(79); // TODO make dynamic
         setStep(3);
-      } else {
-        alert('Login failed');
+        return true;
       }
-    } else {
-      alert('Login failed');
+      return false;
     }
+    return false;
   };
 
   const handleLogout = () => {

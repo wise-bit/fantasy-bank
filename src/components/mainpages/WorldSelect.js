@@ -1,10 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { MenuItem, Button } from '@mui/material';
+import { MenuItem, Button, Typography } from '@mui/material';
 
 import CustomSelect from '../customs/CustomSelect';
 
 const WorldSelect = ({ worlds, selectedWorld, setSelectedWorld, handleNext }) => {
+  const [warningMessage, setWarningMessage] = useState('');
+
+  const validateSelection = () => {
+    if (!selectedWorld) {
+      setWarningMessage('Please select a world before proceeding.');
+    } else {
+      setWarningMessage('');
+      handleNext();
+    }
+  }
+
   return (
     <>
       <CustomSelect
@@ -21,8 +32,19 @@ const WorldSelect = ({ worlds, selectedWorld, setSelectedWorld, handleNext }) =>
           </MenuItem>
         ))}
       </CustomSelect>
+      {warningMessage && (
+        <Typography
+          sx={{
+            color: '#ff8f8f',
+            fontFamily: 'Bona Nova SC',
+            marginTop: '10px',
+          }}
+        >
+          {warningMessage}
+        </Typography>
+      )}
       <Button
-        onClick={handleNext}
+        onClick={validateSelection}
         sx={{
           color: 'black',
           fontFamily: 'Bona Nova SC',
