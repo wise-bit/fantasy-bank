@@ -19,7 +19,11 @@ const NoMatch = () => {
           color='success'
           component={Link}
           to='/'
-          sx={{ marginTop: '40px', fontFamily: 'Bona Nova SC' }}
+          sx={{
+            marginTop: '40px',
+            fontFamily: 'Bona Nova SC',
+            background: 'white',
+          }}
         >
           Go Home
         </Button>
