@@ -99,6 +99,9 @@ const Home = ({ setAuthed, setBankTitle, setFunc2 }) => {
   const handleBack = () => {
     if (step > 1) {
       setStep(step - 1);
+      if (step === 2) {
+        handleSetSelectedWorld('');
+      }
     }
   };
 
