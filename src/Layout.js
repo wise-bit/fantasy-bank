@@ -5,11 +5,15 @@ import PropTypes from 'prop-types';
 
 import Navbar from './components/Navbar';
 
-const Layout = ({ totalBalance }) => {
+const Layout = ({ authed, bankTitle, func2 }) => {
   return (
     <Box>
       <Box sx={{ height: '10vh' }}>
-        <Navbar totalBalance={totalBalance} />
+        <Navbar
+          authed={authed}
+          bankTitle={bankTitle}
+          func2={func2}
+        />
       </Box>
       <Box sx={{ height: '80vh' }}>
         <Outlet />
@@ -20,6 +24,8 @@ const Layout = ({ totalBalance }) => {
 
 Layout.propTypes = {
   totalBalance: PropTypes.number,
+  bankTitle: PropTypes.string,
+  func2: PropTypes.func,
 };
 
 export default Layout;

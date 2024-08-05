@@ -7,7 +7,7 @@ import CustomSelect from '../customs/CustomSelect';
 const WorldSelect = ({
   worlds,
   selectedWorld,
-  setSelectedWorld,
+  handleSetSelectedWorld,
   handleNext,
 }) => {
   const [warningMessage, setWarningMessage] = useState('');
@@ -35,7 +35,7 @@ const WorldSelect = ({
       />
       <CustomSelect
         value={selectedWorld}
-        onChange={(e) => setSelectedWorld(e.target.value)}
+        onChange={(e) => handleSetSelectedWorld(e.target.value)}
         displayEmpty
       >
         <MenuItem value='' disabled>
@@ -77,7 +77,7 @@ const WorldSelect = ({
 WorldSelect.propTypes = {
   worlds: PropTypes.array,
   selectedWorld: PropTypes.string,
-  setSelectedWorld: PropTypes.func,
+  handleSetSelectedWorld: PropTypes.func,
   handleNext: PropTypes.func,
 };
 

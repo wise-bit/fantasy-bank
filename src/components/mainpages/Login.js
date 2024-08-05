@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
-import CustomTextField from '../customs/CustomTextField';
 import PropTypes from 'prop-types';
+
 import KnownWorlds from './DataKnownWorlds';
-import PinInput from '../customs/PinInput'; // Import the new PinInput component
+import PinInput from '../customs/PinInput';
+import CustomTextField from '../customs/CustomTextField';
 
 const Login = ({
   user,
@@ -22,11 +23,8 @@ const Login = ({
 
   const checkLogin = async () => {
     const success = await handleLogin();
-    console.log(success);
     if (!success) {
-      setWarningMessage(
-        'Incorrect username or passcode, please try again!'
-      );
+      setWarningMessage('Incorrect username or passcode, please try again!');
     } else {
       setWarningMessage('');
     }
@@ -52,7 +50,7 @@ const Login = ({
               fontSize: '24px',
             }}
           >
-            {selectedWorld}
+            welcome back!
           </Box>
         </>
       ) : null}
@@ -60,7 +58,7 @@ const Login = ({
         label='Username'
         value={user}
         onChange={(e) => setUser(e.target.value)}
-        sx={{ marginBottom: '30px' }}
+        sx={{ marginBottom: '30px', marginTop: '30px', }}
       />
       <Box sx={{ padding: '20px', background: 'black', borderRadius: '16px' }}>
         <PinInput

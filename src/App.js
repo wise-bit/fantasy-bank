@@ -9,13 +9,33 @@ import Home from './components/Home';
 import './App.css';
 
 const App = () => {
-  const [totalBalance, setTotalBalance] = useState(0);
+  const [authed, setAuthed] = useState(false);
+  const [bankTitle, setBankTitle] = useState('');
+  const [func2, setFunc2] = useState(() => () => {});
 
   return (
     <div>
       <Routes>
-        <Route path='/' element={<Layout totalBalance={totalBalance} />}>
-          <Route index element={<Home setTotalBalance={setTotalBalance} />} />
+        <Route
+          path='/'
+          element={
+            <Layout
+              authed={authed}
+              bankTitle={bankTitle}
+              func2={func2}
+            />
+          }
+        >
+          <Route
+            index
+            element={
+              <Home
+                setAuthed={setAuthed}
+                setBankTitle={setBankTitle}
+                setFunc2={setFunc2}
+              />
+            }
+          />
           <Route path='/home' element={<Home />} />
           <Route path='*' element={<NoMatch />} />
         </Route>
