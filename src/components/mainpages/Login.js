@@ -3,6 +3,7 @@ import { Box, Button, Typography } from '@mui/material';
 import CustomTextField from '../customs/CustomTextField';
 import PropTypes from 'prop-types';
 import KnownWorlds from './DataKnownWorlds';
+import PinInput from '../customs/PinInput'; // Import the new PinInput component
 
 const Login = ({
   user,
@@ -23,7 +24,9 @@ const Login = ({
     const success = await handleLogin();
     console.log(success);
     if (!success) {
-      setWarningMessage('Incorrect username and/or password, please try again.');
+      setWarningMessage(
+        'Incorrect username or passcode, please try again!'
+      );
     } else {
       setWarningMessage('');
     }
@@ -52,26 +55,26 @@ const Login = ({
             {selectedWorld}
           </Box>
         </>
-      ) : (
-        <></>
-      )}
+      ) : null}
       <CustomTextField
         label='Username'
         value={user}
         onChange={(e) => setUser(e.target.value)}
+        sx={{ marginBottom: '30px' }}
       />
-      <CustomTextField
-        label='4-digit passcode'
-        type='password'
-        value={passcode}
-        onChange={(e) => setPasscode(e.target.value)}
-      />
+      <Box sx={{ padding: '20px', background: 'black', borderRadius: '16px' }}>
+        <PinInput
+          value={passcode}
+          onChange={setPasscode}
+          label='4-digit passcode'
+        />
+      </Box>
       {warningMessage && (
         <Typography
           sx={{
             color: '#ff8f8f',
             fontFamily: 'Bona Nova SC',
-            marginTop: '10px',
+            marginTop: '30px',
           }}
         >
           {warningMessage}
@@ -84,7 +87,7 @@ const Login = ({
           fontFamily: 'Bona Nova SC',
           background: 'white',
           marginTop: '30px',
-          width: '300px',
+          width: '280px',
         }}
       >
         login

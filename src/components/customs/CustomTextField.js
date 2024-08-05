@@ -14,6 +14,7 @@ const CustomTextField = styled(MuiTextField)(() => ({
   '& .MuiInputBase-input': {
     padding: '8px 16px', // Adjust padding if needed
     fontFamily: 'Bona Nova SC',
+    textAlign: 'left', // Ensure input text is left-aligned
   },
   '& .MuiInputLabel-root': {
     color: 'white', // White label color
@@ -29,14 +30,17 @@ const CustomTextField = styled(MuiTextField)(() => ({
   },
   '& .MuiInputBase-input::-webkit-input-placeholder': {
     color: 'white', // White placeholder text color
+    textAlign: 'center', // Center-align placeholder text
     fontFamily: 'Bona Nova SC',
   },
   '& .MuiInputBase-input:-ms-input-placeholder': {
     color: 'white', // White placeholder text color for IE
+    textAlign: 'center', // Center-align placeholder text
     fontFamily: 'Bona Nova SC',
   },
   '& .MuiInputBase-input::placeholder': {
     color: 'white', // White placeholder text color
+    textAlign: 'center', // Center-align placeholder text
     fontFamily: 'Bona Nova SC',
   },
   '& .MuiInput-underline:before': {
