@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import WorldSelect from './mainpages/WorldSelect';
 import Login from './mainpages/Login';
 import Profile from './mainpages/Profile';
+import EquipmentList from './mainpages/EquipmentList';
 
 const Home = ({ authed, setAuthed, setBankTitle, setFunc2 }) => {
   // Prepare all function params and fetched data
@@ -35,6 +36,7 @@ const Home = ({ authed, setAuthed, setBankTitle, setFunc2 }) => {
   const storedUserId = localStorage.getItem('Rh8bzfYSBg-fbank-userId');
   const storedUsername = localStorage.getItem('Rh8bzfYSBg-fbank-username');
   const storedBalance = localStorage.getItem('Rh8bzfYSBg-fbank-balance');
+  const storedLoan = localStorage.getItem('Rh8bzfYSBg-fbank-loan');
   const storedTotalFunds = localStorage.getItem('Rh8bzfYSBg-fbank-totalFunds');
   const storedBankTitle = localStorage.getItem('Rh8bzfYSBg-fbank-bankTitle');
 
@@ -45,6 +47,7 @@ const Home = ({ authed, setAuthed, setBankTitle, setFunc2 }) => {
   const [username, setUsername] = useState();
   const [passcode, setPasscode] = useState('');
   const [balance, setBalance] = useState(0);
+  const [loan, setLoan] = useState(0);
   const [totalFunds, setTotalFunds] = useState(0);
 
   const resetCache = () => {
@@ -79,6 +82,7 @@ const Home = ({ authed, setAuthed, setBankTitle, setFunc2 }) => {
     setUserId(storedUserId || '');
     setUsername(storedUsername || '');
     setBalance(strToInt(storedBalance) || 0);
+    setLoan(strToInt(storedLoan) || 0);
     setTotalFunds(strToInt(storedTotalFunds) || 0);
   }, [
     authed,
@@ -86,6 +90,7 @@ const Home = ({ authed, setAuthed, setBankTitle, setFunc2 }) => {
     storedUserId,
     storedUsername,
     storedBalance,
+    storedLoan,
     storedTotalFunds,
   ]);
 
@@ -104,7 +109,14 @@ const Home = ({ authed, setAuthed, setBankTitle, setFunc2 }) => {
     localStorage.setItem('Rh8bzfYSBg-fbank-bankTitle', world);
   };
 
+  const goToShop = () => {
+    setStep(4);
+  };
+
   const handleLogin = async () => {
+    /**
+     * Login function, also used to refresh user data from database
+     */
     const userDoc = await getDocs(collection(db, 'users'));
     const npcDoc = await getDocs(collection(db, 'npcs'));
 
@@ -122,7 +134,9 @@ const Home = ({ authed, setAuthed, setBankTitle, setFunc2 }) => {
 
         const userSum = userDoc.docs.reduce((acc, entity) => {
           const entityData = entity.data();
-          return entityData.real ? acc + strToInt(entityData.balance) : acc;
+          return entityData.real
+            ? acc + strToInt(entityData.balance) - strToInt(entityData.loan)
+            : acc;
         }, 0);
 
         const npcSum = npcDoc.docs.reduce((acc, entity) => {
@@ -131,12 +145,14 @@ const Home = ({ authed, setAuthed, setBankTitle, setFunc2 }) => {
         }, 0);
 
         const balance = userData.data().balance;
+        const loan = userData.data().loan;
         const totalFunds = userSum + npcSum;
 
         // Store user data in local storage
         localStorage.setItem('Rh8bzfYSBg-fbank-userId', userData.id);
         localStorage.setItem('Rh8bzfYSBg-fbank-username', username);
         localStorage.setItem('Rh8bzfYSBg-fbank-balance', balance);
+        localStorage.setItem('Rh8bzfYSBg-fbank-loan', loan);
         localStorage.setItem('Rh8bzfYSBg-fbank-totalFunds', totalFunds);
         localStorage.setItem('Rh8bzfYSBg-fbank-bankTitle', selectedWorld);
 
@@ -147,6 +163,30 @@ const Home = ({ authed, setAuthed, setBankTitle, setFunc2 }) => {
       return false;
     }
     return false;
+  };
+
+  const updateLoan = async (amount) => {
+    if (amount === '' || isNaN(amount)) return false;
+    if (parseFloat(amount) <= 0) return false;
+
+    const newLoan = parseFloat(loan) + parseFloat(amount);
+    const newTotalFunds = parseFloat(totalFunds) - parseFloat(amount);
+
+    try {
+      const docRef = doc(db, 'users', userId);
+      await updateDoc(docRef, { loan: newLoan });
+
+      setLoan(newLoan);
+      setTotalFunds(newTotalFunds);
+
+      localStorage.setItem('Rh8bzfYSBg-fbank-loan', newLoan);
+      localStorage.setItem('Rh8bzfYSBg-fbank-totalFunds', newTotalFunds);
+
+      return true;
+    } catch (error) {
+      console.error('Error updating loan: ', error);
+      return false;
+    }
   };
 
   const updateBalance = async (increment, amount) => {
@@ -220,17 +260,22 @@ const Home = ({ authed, setAuthed, setBankTitle, setFunc2 }) => {
           <Profile
             username={username}
             balance={balance}
+            loan={loan}
             totalFunds={totalFunds}
             updateBalance={updateBalance}
             handleLogin={handleLogin}
+            updateLoan={updateLoan}
+            goToShop={goToShop}
           />
         )}
+        {step === 4 && <EquipmentList handleBack={handleBack} />}
       </Box>
     </>
   );
 };
 
 Home.propTypes = {
+  authed: PropTypes.bool.isRequired,
   setAuthed: PropTypes.func.isRequired,
   setBankTitle: PropTypes.func.isRequired,
   setFunc2: PropTypes.func.isRequired,

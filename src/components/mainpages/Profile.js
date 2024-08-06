@@ -11,11 +11,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const Profile = ({
   username,
   balance,
+  loan,
   totalFunds,
   updateBalance,
+  updateLoan,
   handleLogin,
+  goToShop,
 }) => {
-  const [amount, setAmount] = useState('');
+  const [balanceAmount, setBalanceAmount] = useState('');
+  const [loanAmount, setLoanAmount] = useState('');
   const [open, setOpen] = useState(false);
 
   let imageSrc = KnownPlayers.find(
@@ -27,8 +31,16 @@ const Profile = ({
   }
 
   const handleUpdateBalance = async (increment, amount) => {
-    setAmount('');
+    setBalanceAmount('');
     const success = await updateBalance(increment, amount);
+    if (success) {
+      setOpen(true);
+    }
+  };
+
+  const handleUpdateLoan = async (amount) => {
+    setLoanAmount('');
+    const success = await updateLoan(amount);
     if (success) {
       setOpen(true);
     }
@@ -53,7 +65,34 @@ const Profile = ({
         height: '100%',
       }}
     >
+      {/* goToShop */}
+      <Box
+        sx={{
+          width: '100%',
+          display: 'flex',
+          alignContent: 'end',
+          justifyContent: 'end',
+          marginBottom: '20px',
+        }}
+      >
+        <Button
+          onClick={goToShop}
+          sx={{
+            width: '100%',
+            color: 'black',
+            background: 'white',
+            fontFamily: 'Bona Nova SC',
+            fontSize: '14px',
+            fontWeight: '700',
+          }}
+        >
+          shop
+        </Button>
+      </Box>
+
       <Box sx={{ alignSelf: 'flex-start', width: '100%' }}>
+        {/* Profile Info */}
+
         <Box>
           <p>Greetings,</p>
           <Box
@@ -62,6 +101,9 @@ const Profile = ({
             {username}
           </Box>
         </Box>
+
+        {/* Profile Picture */}
+
         {imageSrc ? (
           <>
             <Box
@@ -79,6 +121,9 @@ const Profile = ({
             />
           </>
         ) : null}
+
+        {/* Wealth Info */}
+
         <Box
           sx={{
             background: 'white',
@@ -100,7 +145,9 @@ const Profile = ({
           }}
         >
           <Box>Contribution:</Box>
-          <Box sx={{ fontSize: '32px' }}>{balance} gp</Box>
+          <Box sx={{ fontSize: '32px' }}>
+            {balance} (-{loan}) gp
+          </Box>
         </Box>
 
         <Box
@@ -122,30 +169,50 @@ const Profile = ({
 
         <Box
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: '20px',
+            background: 'black',
+            padding: '20px',
+            borderRadius: '20px',
+            marginTop: '30px',
+            textAlign: 'center',
           }}
         >
-          <CustomTextField
-            type='number'
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            sx={{ width: '300px', padding: '20px' }}
-            placeholder='Amount'
-          />
-        </Box>
-
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '20px',
-          }}
-        >
-          <Tooltip title='Withdrawal feature coming soon!'>
+          <Box>Manage funds</Box>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <CustomTextField
+              type='number'
+              value={balanceAmount}
+              onChange={(e) => setBalanceAmount(e.target.value)}
+              sx={{ width: '300px', padding: '20px' }}
+              placeholder='Amount'
+            />
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '20px',
+            }}
+          >
+            <Tooltip title='Withdrawal feature coming soon!'>
+              <Button
+                sx={{
+                  color: 'black',
+                  fontFamily: 'Bona Nova SC',
+                  background: 'white',
+                  fontSize: '16px',
+                  width: '120px',
+                }}
+              >
+                Withdraw
+              </Button>
+            </Tooltip>
             <Button
               sx={{
                 color: 'black',
@@ -154,22 +221,61 @@ const Profile = ({
                 fontSize: '16px',
                 width: '120px',
               }}
+              onClick={() => handleUpdateBalance(true, balanceAmount)}
             >
-              Withdraw
+              Deposit
             </Button>
-          </Tooltip>
-          <Button
+          </Box>
+        </Box>
+
+        {/* Loan Components */}
+
+        <Box
+          sx={{
+            background: 'black',
+            padding: '20px',
+            borderRadius: '20px',
+            marginTop: '30px',
+            textAlign: 'center',
+          }}
+        >
+          <Box>Get A Loan</Box>
+          <Box
             sx={{
-              color: 'black',
-              fontFamily: 'Bona Nova SC',
-              background: 'white',
-              fontSize: '16px',
-              width: '120px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
-            onClick={() => handleUpdateBalance(true, amount)}
           >
-            Deposit
-          </Button>
+            <CustomTextField
+              type='number'
+              value={loanAmount}
+              onChange={(e) => setLoanAmount(e.target.value)}
+              sx={{ width: '300px', padding: '20px' }}
+              placeholder='Amount'
+            />
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '20px',
+            }}
+          >
+            <Button
+              sx={{
+                color: 'black',
+                fontFamily: 'Bona Nova SC',
+                background: 'white',
+                fontSize: '16px',
+                width: '120px',
+              }}
+              onClick={() => handleUpdateLoan(loanAmount)}
+            >
+              Loan
+            </Button>
+          </Box>
         </Box>
       </Box>
 
@@ -190,7 +296,9 @@ Profile.propTypes = {
   balance: PropTypes.number.isRequired,
   totalFunds: PropTypes.number.isRequired,
   updateBalance: PropTypes.func,
+  updateLoan: PropTypes.func,
   handleLogin: PropTypes.func,
+  goToShop: PropTypes.func,
 };
 
 export default Profile;
