@@ -4,6 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 import Layout from './Layout';
 import NoMatch from './components/NoMatch';
 import Home from './components/Home';
+import Chat from './components/Chat';
 import './App.css';
 
 const App = () => {
@@ -34,6 +35,7 @@ const App = () => {
           <Route path='*' element={<NoMatch />} />
         </Route>
       </Routes>
+      {authed && <Chat />}
     </div>
   );
 };

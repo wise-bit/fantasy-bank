@@ -6,7 +6,6 @@ const CustomTextField = styled(MuiTextField)(() => ({
   '& .MuiInputBase-root': {
     borderBottom: '1px solid white',
     background: 'transparent',
-    marginTop: '10px',
     color: 'white',
     fontFamily: 'Bona Nova SC',
   },

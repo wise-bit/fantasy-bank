@@ -188,7 +188,7 @@ const Profile = ({
               type='number'
               value={balanceAmount}
               onChange={(e) => setBalanceAmount(e.target.value)}
-              sx={{ width: '300px', padding: '20px' }}
+              sx={{ width: '300px', padding: '20px', marginTop: '10px' }}
               placeholder='Amount'
             />
           </Box>
@@ -251,7 +251,7 @@ const Profile = ({
               type='number'
               value={loanAmount}
               onChange={(e) => setLoanAmount(e.target.value)}
-              sx={{ width: '300px', padding: '20px' }}
+              sx={{ width: '300px', padding: '20px', marginTop: '10px' }}
               placeholder='Amount'
             />
           </Box>

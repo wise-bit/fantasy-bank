@@ -58,7 +58,7 @@ const Login = ({
         label='Username'
         value={user}
         onChange={(e) => setUser(e.target.value)}
-        sx={{ marginBottom: '30px', marginTop: '30px', }}
+        sx={{ marginBottom: '30px', marginTop: '40px', }}
       />
       <Box sx={{ padding: '20px', background: 'black', borderRadius: '16px' }}>
         <PinInput
