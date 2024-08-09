@@ -13,6 +13,7 @@ const Profile = ({
   balance,
   loan,
   totalFunds,
+  selectedWorld,
   updateBalance,
   updateLoan,
   handleLogin,
@@ -23,26 +24,60 @@ const Profile = ({
   const [open, setOpen] = useState(false);
 
   let imageSrc = KnownPlayers.find(
-    (world) => world.name === username
+    (player) => player.name === username
   )?.imageLink;
 
   if (!imageSrc) {
-    imageSrc = KnownPlayers.find((world) => world.name === 'default').imageLink;
+    imageSrc = KnownPlayers.find(
+      (player) => player.name === 'default'
+    ).imageLink;
   }
 
+  const pushBlockchain = async (amount, sender, recipient) => {
+    var myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+
+    var raw = JSON.stringify({
+      sender: sender,
+      recipient: recipient,
+      amount: amount,
+    });
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow',
+    };
+
+    try {
+      fetch(
+        process.env.REACT_APP_PERSONAL_BLOCKCHAIN_API_URL + '/transactions/new',
+        requestOptions
+      )
+        .then((response) => response.text())
+        .then((_result) => {})
+        .catch((_error) => {});
+    } catch (error) {
+      console.error('Error pushing transaction to blockchain:', error);
+    }
+  };
+
   const handleUpdateBalance = async (increment, amount) => {
-    setBalanceAmount('');
     const success = await updateBalance(increment, amount);
     if (success) {
+      setBalanceAmount('');
       setOpen(true);
+      pushBlockchain(amount, username, selectedWorld);
     }
   };
 
   const handleUpdateLoan = async (amount) => {
-    setLoanAmount('');
     const success = await updateLoan(amount);
     if (success) {
+      setLoanAmount('');
       setOpen(true);
+      pushBlockchain(amount, selectedWorld, username);
     }
   };
 
@@ -294,7 +329,9 @@ const Profile = ({
 Profile.propTypes = {
   username: PropTypes.string.isRequired,
   balance: PropTypes.number.isRequired,
+  loan: PropTypes.number.isRequired,
   totalFunds: PropTypes.number.isRequired,
+  selectedWorld: PropTypes.string.isRequired,
   updateBalance: PropTypes.func,
   updateLoan: PropTypes.func,
   handleLogin: PropTypes.func,

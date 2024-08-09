@@ -167,10 +167,15 @@ const Home = ({ authed, setAuthed, setBankTitle, setFunc2 }) => {
 
   const updateLoan = async (amount) => {
     if (amount === '' || isNaN(amount)) return false;
-    if (parseFloat(amount) <= 0) return false;
+    
+    const amountNum = parseFloat(amount);
+    const totalFundsNum = parseFloat(totalFunds);
 
-    const newLoan = parseFloat(loan) + parseFloat(amount);
-    const newTotalFunds = parseFloat(totalFunds) - parseFloat(amount);
+    if (amountNum <= 0) return false;
+    if (totalFundsNum < amountNum) return false;
+
+    const newLoan = parseFloat(loan) + amountNum;
+    const newTotalFunds = totalFundsNum - amountNum;
 
     try {
       const docRef = doc(db, 'users', userId);
@@ -262,6 +267,7 @@ const Home = ({ authed, setAuthed, setBankTitle, setFunc2 }) => {
             balance={balance}
             loan={loan}
             totalFunds={totalFunds}
+            selectedWorld={selectedWorld}
             updateBalance={updateBalance}
             handleLogin={handleLogin}
             updateLoan={updateLoan}
