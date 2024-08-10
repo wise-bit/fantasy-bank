@@ -17,25 +17,17 @@ const Chat = () => {
     setInput(event.target.value);
   };
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = async (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+
     if (input.trim() === '') return;
 
     const userMessage = { sender: 'user', text: input };
     setMessages([...messages, userMessage]);
 
-    // try {
-    //   const response = await axios.post('https://api.example.com/gemini', {
-    //     prompt: input,
-    //     apiKey: 'YOUR_API_KEY',
-    //   });
-
-    //   const aiMessage = { sender: 'ai', text: response.data.answer };
-    //   setMessages((prevMessages) => [...prevMessages, aiMessage]);
-    // } catch (error) {
-    //   console.error('Error communicating with AI:', error);
-    // }
-
-    // setInput('');
+    setInput('');
   };
 
   return (
@@ -92,34 +84,36 @@ const Chat = () => {
               </Box>
             ))}
           </Box>
-          <Box sx={{ display: 'flex' }}>
-            <CustomTextField
-              value={input}
-              onChange={handleInputChange}
-              fullWidth
-              placeholder='Type a message'
-              variant='outlined'
-              size='small'
-              sx={{ color: 'white' }}
-            />
-            <Button
-              onClick={handleSendMessage}
-              variant='contained'
-              sx={{
-                color: 'black',
-                background: 'white',
-                fontFamily: 'Bona Nova SC',
-                fontSize: '16px',
-                marginLeft: '10px',
-                '&:hover': {
-                  backgroundColor: 'white',
-                  color: '#3c52b2',
-                },
-              }}
-            >
-              Send
-            </Button>
-          </Box>
+          <form onSubmit={(e) => handleSendMessage(e)}>
+            <Box sx={{ display: 'flex' }}>
+              <CustomTextField
+                value={input}
+                onChange={handleInputChange}
+                fullWidth
+                placeholder='Type a message'
+                variant='outlined'
+                size='small'
+                sx={{ color: 'white' }}
+              />
+              <Button
+                onClick={handleSendMessage}
+                variant='contained'
+                sx={{
+                  color: 'black',
+                  background: 'white',
+                  fontFamily: 'Bona Nova SC',
+                  fontSize: '16px',
+                  marginLeft: '10px',
+                  '&:hover': {
+                    backgroundColor: 'white',
+                    color: '#3c52b2',
+                  },
+                }}
+              >
+                Send
+              </Button>
+            </Box>
+          </form>
         </Box>
       )}
     </div>
