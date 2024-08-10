@@ -1,7 +1,9 @@
 import { TextField as MuiTextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-const CustomTextField = styled(MuiTextField)(() => ({
+const CustomTextField = styled(({ isCenter, ...otherProps }) => (
+  <MuiTextField {...otherProps} />
+))(({ isCenter = true }) => ({
   width: 400,
   '& .MuiInputBase-root': {
     borderBottom: '1px solid white',
@@ -28,17 +30,17 @@ const CustomTextField = styled(MuiTextField)(() => ({
   },
   '& .MuiInputBase-input::-webkit-input-placeholder': {
     color: 'white',
-    textAlign: 'center',
+    textAlign: isCenter ? 'center' : 'left',
     fontFamily: 'Bona Nova SC',
   },
   '& .MuiInputBase-input:-ms-input-placeholder': {
     color: 'white',
-    textAlign: 'center',
+    textAlign: isCenter ? 'center' : 'left',
     fontFamily: 'Bona Nova SC',
   },
   '& .MuiInputBase-input::placeholder': {
     color: 'white',
-    textAlign: 'center',
+    textAlign: isCenter ? 'center' : 'left',
     fontFamily: 'Bona Nova SC',
   },
   '& .MuiInput-underline:before': {

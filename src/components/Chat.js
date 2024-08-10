@@ -1,33 +1,76 @@
 import React, { useState } from 'react';
-// import axios from 'axios';
 import { IconButton, Box, Button } from '@mui/material';
 import ChatIcon from '@mui/icons-material/Chat';
+import PropTypes from 'prop-types';
+
 import CustomTextField from './customs/CustomTextField';
 
-const Chat = () => {
+const Chat = ({ geminiModel }) => {
   const [expanded, setExpanded] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
 
-  const toggleChat = () => {
-    setExpanded(!expanded);
+  const toggleChat = () => setExpanded(!expanded);
+  const handleInputChange = (event) => setInput(event.target.value);
+
+  const getAiResponse = async (input) => {
+    try {
+      const AI_PREFACE = process.env.REACT_APP_GEMINI_PREFACE;
+      const geminiResult = await geminiModel.generateContent(
+        AI_PREFACE + input
+      );
+      const geminiResponse = await geminiResult.response;
+      const geminiText = geminiResponse.text();
+      return geminiText;
+    } catch (error) {
+      return 'Unable to generate response for that message, please try again!';
+    }
   };
 
-  const handleInputChange = (event) => {
-    setInput(event.target.value);
+  const handleCommand = (input) => {
+    const lowerInput = input.toLowerCase();
+    const [command, args] = lowerInput.split(' ', 2);
+    if (command === '/r' || command === '/roll') {
+      const match = args.match(/^(\d+)d(\d+)$/);
+      if (match) {
+        const numberOfDice = parseInt(match[1], 10);
+        const sides = parseInt(match[2], 10);
+
+        const rolls = [];
+        for (let i = 0; i < numberOfDice; i++) {
+          rolls.push(Math.floor(Math.random() * sides) + 1);
+        }
+
+        const total = rolls.reduce((acc, cur) => acc + cur, 0);
+        return `${rolls.join(' + ')} = ${total}`;
+      } else {
+        return "Invalid roll command. Use the format '/roll NdM', where N is the number of dice and M is the number of sides.";
+      }
+    }
+
+    return null;
   };
 
   const handleSendMessage = async (e) => {
-    if (e) {
-      e.preventDefault();
-    }
-
+    if (e) e.preventDefault();
     if (input.trim() === '') return;
 
     const userMessage = { sender: 'user', text: input };
     setMessages([...messages, userMessage]);
-
     setInput('');
+
+    if (input.startsWith('/')) {
+      const commandResult = handleCommand(input);
+      if (commandResult) {
+        const customMessage = { sender: 'ai', text: commandResult };
+        setMessages((prevMessages) => [...prevMessages, customMessage]);
+        return;
+      }
+    }
+
+    const aiResponse = await getAiResponse(input);
+    const aiMessage = { sender: 'ai', text: aiResponse };
+    setMessages((prevMessages) => [...prevMessages, aiMessage]);
   };
 
   return (
@@ -41,8 +84,8 @@ const Chat = () => {
             position: 'absolute',
             bottom: '60px',
             right: '0',
-            width: '300px',
-            height: '400px',
+            width: '400px',
+            height: '600px',
             backgroundColor: '#102423',
             border: '4px solid #000',
             borderRadius: '8px',
@@ -75,8 +118,9 @@ const Chat = () => {
                     padding: '8px 12px',
                     borderRadius: '20px',
                     backgroundColor:
-                      msg.sender === 'user' ? '#b5c4c4' : '#black',
+                      msg.sender === 'user' ? '#b5c4c4' : 'black',
                     color: msg.sender === 'user' ? 'black' : 'white',
+                    fontSize: '16px',
                   }}
                 >
                   {msg.text}
@@ -87,6 +131,7 @@ const Chat = () => {
           <form onSubmit={(e) => handleSendMessage(e)}>
             <Box sx={{ display: 'flex' }}>
               <CustomTextField
+                isCenter={false}
                 value={input}
                 onChange={handleInputChange}
                 fullWidth
@@ -118,6 +163,10 @@ const Chat = () => {
       )}
     </div>
   );
+};
+
+Chat.propTypes = {
+  geminiModel: PropTypes.object.isRequired,
 };
 
 export default Chat;

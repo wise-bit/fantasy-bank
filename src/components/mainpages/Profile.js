@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Box, Button, Snackbar, Tooltip } from '@mui/material';
 import PropTypes from 'prop-types';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import KnownPlayers from './DataKnownPlayers';
 import CustomTextField from '../customs/CustomTextField';
 import CustomCircularButton from '../customs/CustomCircularButton';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Profile = ({
   username,
@@ -332,10 +332,10 @@ Profile.propTypes = {
   loan: PropTypes.number.isRequired,
   totalFunds: PropTypes.number.isRequired,
   selectedWorld: PropTypes.string.isRequired,
-  updateBalance: PropTypes.func,
-  updateLoan: PropTypes.func,
-  handleLogin: PropTypes.func,
-  goToShop: PropTypes.func,
+  updateBalance: PropTypes.func.isRequired,
+  updateLoan: PropTypes.func.isRequired,
+  handleLogin: PropTypes.func.isRequired,
+  goToShop: PropTypes.func.isRequired,
 };
 
 export default Profile;

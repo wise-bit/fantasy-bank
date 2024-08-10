@@ -167,7 +167,7 @@ const Home = ({ authed, setAuthed, setBankTitle, setFunc2 }) => {
 
   const updateLoan = async (amount) => {
     if (amount === '' || isNaN(amount)) return false;
-    
+
     const amountNum = parseFloat(amount);
     const totalFundsNum = parseFloat(totalFunds);
 
